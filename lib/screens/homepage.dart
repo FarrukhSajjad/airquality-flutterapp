@@ -1,4 +1,10 @@
+import 'package:airquality/services/pollution.dart';
+import 'package:airquality/widgets/healt_recomendation.dart';
+import 'package:airquality/widgets/weather_update.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speedometer/flutter_speedometer.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class HomePage extends StatefulWidget {
   final locationstats;
@@ -12,6 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  PollutionModel pollutionModel = PollutionModel();
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   var temprature;
   var humidity;
   var aqIndex;
+  String precaution;
 
   void updateUI(dynamic locationData) {
     city = locationData['data']['city'];
@@ -33,51 +42,112 @@ class _HomePageState extends State<HomePage> {
     temprature = locationData['data']['current']['weather']['tp'];
     humidity = locationData['data']['current']['weather']['hu'];
     aqIndex = locationData['data']['current']['pollution']['aqius'];
+    precaution = pollutionModel.getPollution(aqIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.pink[200],
-                  borderRadius: BorderRadius.circular(20),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                WeatherUpdates(
+                  temprature: temprature,
+                  humidity: humidity,
+                  city: city,
+                  state: state,
+                  country: country,
                 ),
-                height: MediaQuery.of(context).size.height / 4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.cloud_circle,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                        SizedBox(
-                          width: 25,
-                        ),
-                        Text(
-                          '$temprature °C',
-                          style: TextStyle(color: Colors.white, fontSize: 35),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '$city | $state | $country',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                  ],
+                SizedBox(
+                  height: 20,
                 ),
-              )
-            ],
+                Speedometer(
+                  size: 200,
+                  minValue: 0,
+                  maxValue: 310,
+                  currentValue: aqIndex,
+                  warningValue: 150,
+                  backgroundColor: Colors.white,
+                  meterColor: Colors.greenAccent,
+                  warningColor: Colors.red,
+                  kimColor: Colors.black,
+                  displayNumericStyle: GoogleFonts.gayathri(
+                    fontSize: 28,
+                    color: Colors.blue,
+                  ),
+                  displayText: 'Air Quality Index',
+                  displayTextStyle: GoogleFonts.robotoMono(
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  child: Text(
+                    '$precaution',
+                    style: GoogleFonts.teko(
+                      fontSize: 35,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'HEALTH RECOMMENDATIONS',
+                        style: GoogleFonts.teko(
+                          color: Colors.blue,
+                          fontSize: 25,
+                        ),
+                      ),
+                      Text(
+                        'How to protect yourself from pollution in $city ?',
+                        style:
+                            GoogleFonts.openSans(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      NotificationListener<OverscrollIndicatorNotification>(
+                        onNotification: (overscroll) {
+                          overscroll.disallowGlow();
+                        },
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              HealthRecomedation(
+                                healthrec:
+                                    'Sensitive groups should wear a mask outside',
+                                howto: 'GET A MASK',
+                                image: 'assets/images/mask.png',
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              HealthRecomedation(
+                                healthrec: 'Run an air purifier',
+                                howto: 'GET AN AIR PURIFIER',
+                                image: 'assets/images/airpurifier.png',
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

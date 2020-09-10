@@ -1,4 +1,3 @@
-import 'package:airquality/screens/homepage.dart';
 import 'package:airquality/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
