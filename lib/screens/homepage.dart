@@ -55,6 +55,33 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    children: [
+                      Icon(Icons.dashboard),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search for location'),
+                        ),
+                      ),
+                      GestureDetector(
+                        child: Icon(Icons.search),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
                 WeatherUpdates(
                   temprature: temprature,
                   humidity: humidity,
