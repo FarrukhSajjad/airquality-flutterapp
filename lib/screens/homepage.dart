@@ -4,7 +4,6 @@ import 'package:airquality/widgets/weather_update.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speedometer/flutter_speedometer.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 class HomePage extends StatefulWidget {
   final locationstats;
@@ -35,6 +34,8 @@ class _HomePageState extends State<HomePage> {
   var aqIndex;
   String precaution;
 
+  String cityName;
+
   void updateUI(dynamic locationData) {
     city = locationData['data']['city'];
     state = locationData['data']['state'];
@@ -48,6 +49,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'AIR VISUAL',
+          style: GoogleFonts.architectsDaughter(color: Colors.black),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
@@ -55,30 +65,6 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    children: [
-                      Icon(Icons.dashboard),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Search for location'),
-                        ),
-                      ),
-                      GestureDetector(
-                        child: Icon(Icons.search),
-                      ),
-                    ],
-                  ),
-                ),
                 SizedBox(
                   height: 8,
                 ),
@@ -139,12 +125,13 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'How to protect yourself from pollution in $city ?',
                         style:
-                            GoogleFonts.openSans(fontWeight: FontWeight.bold),
+                        GoogleFonts.openSans(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       NotificationListener<OverscrollIndicatorNotification>(
+                        // ignore: missing_return
                         onNotification: (overscroll) {
                           overscroll.disallowGlow();
                         },
@@ -154,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               HealthRecomedation(
                                 healthrec:
-                                    'Sensitive groups should wear a mask outside',
+                                'Sensitive groups should wear a mask outside',
                                 howto: 'GET A MASK',
                                 image: 'assets/images/mask.png',
                               ),

@@ -2,6 +2,7 @@ import 'package:airquality/screens/homepage.dart';
 import 'package:airquality/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import '../services/location.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -27,12 +28,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
         locationstats: locationData,
       );
     }));
-    //String city = decodedData['data']['city'];
   }
 
   @override
   void initState() {
     getLocationData();
+
     super.initState();
   }
 
